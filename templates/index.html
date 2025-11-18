@@ -78,7 +78,7 @@
                                 <a id="search-btn" href="#"><i class="fa fa-search" aria-hidden="true"></i> Search</a>
                             </div>
                             <div class="dorne-signin-btn">
-                                <a href="{{ url_for('auth.login') }}">Sign in or Register</a>
+                                <a href="">Sign in or Register</a>
                             </div>
                             <div class="dorne-add-listings-btn">
                                 <a href="{{ url_for('add_listing') }}" class="btn dorne-btn">+ Add Listings</a>
@@ -144,3 +144,29 @@
         <!-- Hero Social Btn -->
         <div class="hero-social-btn">
             <div class="social-title d-flex align-items-center">
+            </div>
+            <div class="social-btn">
+                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+            </div>
+        </div>
+    </section>
+    <!-- ***** Welcome Area End ***** -->
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- jQuery -->
+    <script src="{{ url_for('static', filename='js/jquery/jquery-2.2.4.min.js') }}"></script>
+
+    <!-- Popper + Bootstrap JS -->
+    <script src="{{ url_for('static', filename='js/bootstrap/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.min.js') }}"></script>
+
+    <!-- Plugins + Active scripts (IMPORTANT for preloader) -->
+    <script src="{{ url_for('static', filename='js/others/plugins.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/active.js') }}"></script>
+</body>
+</html>
+

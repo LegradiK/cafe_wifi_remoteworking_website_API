@@ -27,6 +27,10 @@ def explore():
 def listing():
     return render_template("listing.html", google_maps_api_key=google_maps_api_key)
 
+@app.route("/add_listing")
+def add_listing():
+    return render_template("listing.html", google_maps_api_key=google_maps_api_key)
+
 @app.route("/single_listing")
 def single_listing():
     return render_template("single_listing.html", google_maps_api_key=google_maps_api_key)
