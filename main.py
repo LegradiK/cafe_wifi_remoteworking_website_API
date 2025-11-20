@@ -5,7 +5,7 @@ import os
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cafe.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(__file__), 'cafes.db')}"
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY')
 db = SQLAlchemy(app)
 Bootstrap5(app)
@@ -25,6 +25,14 @@ class Cafe(db.Model):
     seats = db.Column(db.String(250))
     coffee_price = db.Column(db.String(50))
 
+REGION_MAP = {
+    "north": ["Haringey", "Islington", "Camden", "Barnet"],
+    "south": ["Lambeth", "Southwark", "Greenwich", "Croydon", "Peckham", "Bermondsey"],
+    "east": ["Hackney", "Tower Hamlets", "Whitechapel"],
+    "west": ["Hammersmith", "Ealing", "Kensington", "South Kensington"],
+    "central": ["Westminster", "Camden Town", "Holborn", "Soho", "Shoreditch", "Clerkenwell", "Borough", "London Bridge", "Bankside", "Barbican"]
+}
+
 # all Flask routes below
 @app.route("/")
 def home():
@@ -32,13 +40,10 @@ def home():
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
-
-    # Get all unique locations
-    locations = [loc[0] for loc in db.session.query(Cafe.location).distinct().all()]
-
-    selected_locations = request.form.getlist('locations')  # list of selected locations
-
     cafes = []
+    selected_region = request.form.get("region")
+
+    query = Cafe.query
 
     if request.method == "POST":
         name = request.form.get("name")
@@ -49,12 +54,12 @@ def search():
         min_seats = request.form.get("min_seats")
         max_price = request.form.get("max_price")
 
-        query = Cafe.query
-
         if name:
             query = query.filter(Cafe.name.ilike(f"%{name}%"))
-        if selected_locations:
-            query = query.filter(Cafe.location.in_(selected_locations))
+
+        if selected_region and selected_region in REGION_MAP:
+            query = query.filter(Cafe.location.in_(REGION_MAP[selected_region]))
+
         if has_wifi:
             query = query.filter_by(has_wifi=True)
         if has_sockets:
@@ -70,12 +75,7 @@ def search():
 
         cafes = query.all()
 
-    return render_template(
-        "search.html",
-        cafes=cafes,
-        locations=locations,
-        selected_locations=selected_locations
-    )
+    return render_template("search.html", cafes=cafes)
 
 @app.route('/service')
 def service():
