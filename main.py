@@ -1,7 +1,28 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap5
+from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 import os
+
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cafe.db'
+db = SQLAlchemy(app)
+
+class Cafe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250), nullable=False)
+    map_url = db.Column(db.String(500), nullable=False)
+    img_url = db.Column(db.String(500), nullable=False)
+    location = db.Column(db.String(250), nullable=False)
+    has_sockets = db.Column(db.Boolean, nullable=False)
+    has_toilet = db.Column(db.Boolean, nullable=False)
+    has_wifi = db.Column(db.Boolean, nullable=False)
+    can_take_calls = db.Column(db.Boolean, nullable=False)
+    # Optional fields
+    seats = db.Column(db.String(250))
+    coffee_price = db.Column(db.String(50))
+
 
 app = Flask(__name__)
 
@@ -15,34 +36,34 @@ Bootstrap5(app)
 def home():
     return render_template("index.html", google_maps_api_key=google_maps_api_key)
 
-@app.route("/search")
+@app.route('/search')
 def search():
-    return render_template("listing.html", google_maps_api_key=google_maps_api_key)
+    query = request.args.get("query", "")
+    if query:
+        cafes = Cafe.query.filter(
+            Cafe.name.ilike(f"%{query}%") |
+            Cafe.location.ilike(f"%{query}%")
+        ).all()
+    else:
+        cafes = []
 
-@app.route("/explore")
-def explore():
-    return render_template("listing.html", google_maps_api_key=google_maps_api_key)
+    return render_template("search.html", cafes=cafes, query=query)
 
-@app.route("/listing")
-def listing():
-    return render_template("listing.html", google_maps_api_key=google_maps_api_key)
-
-@app.route("/add_listing")
-def add_listing():
-    return render_template("listing.html", google_maps_api_key=google_maps_api_key)
-
-@app.route("/single_listing")
-def single_listing():
-    return render_template("single_listing.html", google_maps_api_key=google_maps_api_key)
-
-@app.route("/contact")
+@app.route('/service')
+def service():
+    return render_template('service.html')
+@app.route('/testimonial')
+def testimonial():
+    return render_template('testimonial.html')
+@app.route('/contact')
 def contact():
-    return render_template("contact.html", google_maps_api_key=google_maps_api_key)
-
-@app.route("/auth_login")
-def auth_login():
-    return render_template("auth_login.html", google_maps_api_key=google_maps_api_key)
-
+    return render_template('contact.html')
+@app.route('/about')
+def about():
+    return render_template('about.html')
+@app.route('/menu')
+def menu():
+    return render_template('menu.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
