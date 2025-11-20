@@ -1,13 +1,15 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
-import pandas as pd
 import os
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cafe.db'
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY')
 db = SQLAlchemy(app)
+Bootstrap5(app)
+google_maps_api_key = os.environ.get("GOOGLE_MAPS_API_KEY")
 
 class Cafe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,31 +25,57 @@ class Cafe(db.Model):
     seats = db.Column(db.String(250))
     coffee_price = db.Column(db.String(50))
 
-
-app = Flask(__name__)
-
-# don't forget to source data.env file before running
-app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY')
-google_maps_api_key = os.environ.get("GOOGLE_MAPS_API_KEY")
-Bootstrap5(app)
-
 # all Flask routes below
 @app.route("/")
 def home():
     return render_template("index.html", google_maps_api_key=google_maps_api_key)
 
-@app.route('/search')
+@app.route("/search", methods=["GET", "POST"])
 def search():
-    query = request.args.get("query", "")
-    if query:
-        cafes = Cafe.query.filter(
-            Cafe.name.ilike(f"%{query}%") |
-            Cafe.location.ilike(f"%{query}%")
-        ).all()
-    else:
-        cafes = []
 
-    return render_template("search.html", cafes=cafes, query=query)
+    # Get all unique locations
+    locations = [loc[0] for loc in db.session.query(Cafe.location).distinct().all()]
+
+    selected_locations = request.form.getlist('locations')  # list of selected locations
+
+    cafes = []
+
+    if request.method == "POST":
+        name = request.form.get("name")
+        has_wifi = request.form.get("has_wifi")
+        has_sockets = request.form.get("has_sockets")
+        has_toilet = request.form.get("has_toilet")
+        can_take_calls = request.form.get("can_take_calls")
+        min_seats = request.form.get("min_seats")
+        max_price = request.form.get("max_price")
+
+        query = Cafe.query
+
+        if name:
+            query = query.filter(Cafe.name.ilike(f"%{name}%"))
+        if selected_locations:
+            query = query.filter(Cafe.location.in_(selected_locations))
+        if has_wifi:
+            query = query.filter_by(has_wifi=True)
+        if has_sockets:
+            query = query.filter_by(has_sockets=True)
+        if has_toilet:
+            query = query.filter_by(has_toilet=True)
+        if can_take_calls:
+            query = query.filter_by(can_take_calls=True)
+        if min_seats:
+            query = query.filter(Cafe.seats.cast(db.Integer) >= int(min_seats))
+        if max_price:
+            query = query.filter(Cafe.coffee_price.cast(db.Float) <= float(max_price))
+
+        cafes = query.all()
+
+    return render_template(
+        "search.html",
+        cafes=cafes,
+        locations=locations,
+        selected_locations=selected_locations
+    )
 
 @app.route('/service')
 def service():
