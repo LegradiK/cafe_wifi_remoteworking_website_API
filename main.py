@@ -42,7 +42,7 @@ def home():
 def search():
     cafes = []
     selected_region = request.form.get("region")
-    view_type = request.args.get("view_type", "grid")
+    view_type = request.args.get("view_type", "grid")  # "grid" or "map"
 
     query = Cafe.query
 
@@ -74,8 +74,33 @@ def search():
         if max_price:
             query = query.filter(Cafe.coffee_price.cast(db.Float) <= float(max_price))
 
-        cafes = query.all()
-    return render_template("search.html", cafes=cafes, view_type=view_type)
+    cafes = query.all()
+
+    # Extract coordinates from map_url
+    cafes_data = []
+    for cafe in cafes:
+        try:
+            coords_part = cafe.map_url.split("/@")[1].split(",")
+            lat = float(coords_part[0])
+            lng = float(coords_part[1])
+            cafes_data.append({
+                "id": cafe.id,
+                "name": cafe.name,
+                "location": cafe.location,
+                "img_url": cafe.img_url,
+                "lat": lat,
+                "lng": lng
+            })
+        except Exception as e:
+            # Skip cafes with invalid URLs
+            continue
+
+    return render_template(
+        "search.html",
+        cafes=cafes_data,
+        view_type=view_type,
+        google_maps_api_key=google_maps_api_key
+    )
 
 @app.route('/service')
 def service():
