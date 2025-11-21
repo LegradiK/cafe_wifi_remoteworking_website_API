@@ -5,31 +5,28 @@
     <meta charset="utf-8">
     <title>London Cafe listings</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="Free Website Template" name="keywords">
-    <meta content="Free Website Template" name="description">
 
-    <!-- Favicon -->
-    <link href="{{url_for('static', filename='img/favicon.ico')}}" rel="icon">
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
 
     <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Libraries Stylesheet -->
+    <!-- Libraries -->
     <link href="{{url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css')}}" rel="stylesheet" />
+    <link href="{{url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css')}}" rel="stylesheet">
 
-    <!-- Customized Bootstrap Stylesheet -->
     <link href="{{url_for('static', filename='css/style.min.css')}}" rel="stylesheet">
 </head>
 
 <body class="d-flex flex-column min-vh-100">
     {% include 'header.html' %}
+
     <main class="flex-fill">
-        <!-- Page Header Start -->
+
+        <!-- Page Header -->
         <div class="container-fluid page-header mb-5 position-relative overlay-bottom">
             <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
                 <h1 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase">Search</h1>
@@ -40,134 +37,171 @@
                 </div>
             </div>
         </div>
-        <!-- Page Header End -->
+
         {% block content %}
 
         <div class="container py-5">
             <div class="row justify-content-center">
-                <div class="col-lg-14 col-xl-12">
+                <div class="col-xl-12">
                     <div class="card p-5 shadow">
-                    <h3 class="text-center mb-4">Where would you like to work from today?</h3>
-                    <form method="POST">
-                        <div class="row mb-4">
-                            <div class="col-md-4 mb-3">
-                                <label for="name" class="form-label">Cafe Name</label>
-                                <input type="text" id="name" class="form-control form-control-lg" name="name" placeholder="Enter Cafe Name">
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label for="region" class="form-label">Region</label>
-                                <select id="region" class="form-control form-control-lg" name="region">
-                                    <option value="">Select Region</option>
-                                    <option value="central">Central London</option>
-                                    <option value="north">North London</option>
-                                    <option value="south">South London</option>
-                                    <option value="east">East London</option>
-                                    <option value="west">West London</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 mb-3">
-                                <label for="min_seats" class="form-label">Min Seats</label>
-                                <input type="number" id="min_seats" class="form-control form-control-lg" name="min_seats" placeholder="e.g. 20">
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label for="max_price" class="form-label">Max Coffee Price (£)</label>
-                                <input type="number" id="max_price" step="0.01" class="form-control form-control-lg" name="max_price" placeholder="e.g. 3.50">
-                            </div>
-                        </div>
 
-                        <div class="row mb-4">
-                            <div class="col-md-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="wifi" name="has_wifi">
-                                    <label class="form-check-label" for="wifi">Wi-Fi</label>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="sockets" name="has_sockets">
-                                    <label class="form-check-label" for="sockets">Sockets</label>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="toilet" name="has_toilet">
-                                    <label class="form-check-label" for="toilet">Toilet</label>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="calls" name="can_take_calls">
-                                    <label class="form-check-label" for="calls">Can Take Calls</label>
-                                </div>
-                            </div>
-                        </div>
+                        <h3 class="text-center mb-4">Where would you like to work from today?</h3>
 
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-lg">Search</button>
-                        </div>
-                    </form>
-                {% if cafes %}
-                    <div class="mb-3">
-                        <label class="form-label">View Type:</label>
-                        <div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
-                            <label class="btn btn-outline-primary {% if view_type == 'grid' or not view_type %}active{% endif %}">
-                                <input type="radio" name="view_type" value="grid" autocomplete="off" {% if view_type == 'grid' or not view_type %}checked{% endif %}> Grid
-                            </label>
-                            <label class="btn btn-outline-primary {% if view_type == 'map' %}active{% endif %}">
-                                <input type="radio" name="view_type" value="map" autocomplete="off" {% if view_type == 'map' %}checked{% endif %}> Map
-                            </label>
-                        </div>
-                    </div>
-                    {% if view_type == 'grid' %}
-                        <div class="container mt-4">
-                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5 mt-5">
-                                    {% for cafe in cafes %}
-                                    <div class="col">
-                                        <div class="card h-100 shadow-sm">
-                                            <div class="card-img-top" style="background-image: url('{{ cafe.img_url }}'); height: 200px; background-size: cover; background-position: center;"></div>
-                                            <div class="card-body">
-                                                <h5 class="card-title">{{ cafe.name }}</h5>
-                                                <p class="card-text">
-                                                    Location: {{ cafe.location }}<br>
-                                                    Seats: {{ cafe.seats }}<br>
-                                                    Coffee Price: {{ cafe.coffee_price }}<br>
-                                                    {% if cafe.has_wifi %}Wi-Fi ✔{% endif %}
-                                                    {% if cafe.has_sockets %} | Sockets ✔{% endif %}
-                                                    {% if cafe.has_toilet %} | Toilet ✔{% endif %}
-                                                    {% if cafe.can_take_calls %} | Calls ✔{% endif %}
-                                                </p>
-                                                <a href="{{ cafe.map_url }}" target="_blank" class="btn btn-primary btn-sm">View on Map</a>
+                        <!-- SEARCH FORM -->
+                        <form method="POST">
+                            <div class="row mb-4">
+                                <div class="col-md-4 mb-3">
+                                    <label for="name" class="form-label">Cafe Name</label>
+                                    <input type="text" id="name" class="form-control form-control-lg" name="name" placeholder="Enter Cafe Name">
+                                </div>
+
+                                <div class="col-md-3 mb-3">
+                                    <label for="region" class="form-label">Region</label>
+                                    <select id="region" class="form-control form-control-lg" name="region">
+                                        <option value="">Select Region</option>
+                                        <option value="central">Central London</option>
+                                        <option value="north">North London</option>
+                                        <option value="south">South London</option>
+                                        <option value="east">East London</option>
+                                        <option value="west">West London</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2 mb-3">
+                                    <label for="min_seats" class="form-label">Min Seats</label>
+                                    <input type="number" id="min_seats" class="form-control form-control-lg" name="min_seats" placeholder="e.g. 20">
+                                </div>
+
+                                <div class="col-md-3 mb-3">
+                                    <label for="max_price" class="form-label">Max Coffee Price (£)</label>
+                                    <input type="number" id="max_price" step="0.01" class="form-control form-control-lg" name="max_price" placeholder="e.g. 3.50">
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="wifi" name="has_wifi">
+                                        <label class="form-check-label" for="wifi">Wi-Fi</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="sockets" name="has_sockets">
+                                        <label class="form-check-label" for="sockets">Sockets</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="toilet" name="has_toilet">
+                                        <label class="form-check-label" for="toilet">Toilet</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="calls" name="can_take_calls">
+                                        <label class="form-check-label" for="calls">Can Take Calls</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">Search</button>
+                            </div>
+                        </form>
+
+                        <!-- RESULTS SECTION -->
+                        {% if cafes %}
+
+                            <!-- GRID / MAP TOGGLE -->
+                            <div class="d-flex justify-content-end mt-4">
+
+                                <form method="POST" id="viewToggleForm">
+                                    <!-- Preserve search filters when switching view -->
+                                    <input type="hidden" name="name" value="{{ request.form.get('name', '') }}">
+                                    <input type="hidden" name="region" value="{{ request.form.get('region', '') }}">
+                                    <input type="hidden" name="min_seats" value="{{ request.form.get('min_seats', '') }}">
+                                    <input type="hidden" name="max_price" value="{{ request.form.get('max_price', '') }}">
+                                    <input type="hidden" name="has_wifi" value="{{ 'on' if request.form.get('has_wifi') else '' }}">
+                                    <input type="hidden" name="has_sockets" value="{{ 'on' if request.form.get('has_sockets') else '' }}">
+                                    <input type="hidden" name="has_toilet" value="{{ 'on' if request.form.get('has_toilet') else '' }}">
+                                    <input type="hidden" name="can_take_calls" value="{{ 'on' if request.form.get('can_take_calls') else '' }}">
+
+                                    <div class="btn-group">
+                                        <button name="view_type" value="grid" class="btn btn-outline-primary {% if view_type == 'grid' %}active{% endif %}">
+                                            Grid
+                                        </button>
+                                        <button name="view_type" value="map" class="btn btn-outline-primary {% if view_type == 'map' %}active{% endif %}">
+                                            Map
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+
+                            <!-- GRID VIEW -->
+                            {% if view_type == 'grid' %}
+                                <div class="container mt-4">
+                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5 mt-3">
+                                        {% for cafe in cafes %}
+                                        <div class="col">
+                                            <div class="card h-100 shadow-sm">
+                                                <div class="card-img-top"
+                                                    style="background-image: url('{{ cafe.img_url }}');
+                                                            height: 200px; background-size: cover; background-position: center;">
+                                                </div>
+
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ cafe.name }}</h5>
+                                                    <p class="card-text">
+                                                        Location: {{ cafe.location }}<br>
+                                                        Seats: {{ cafe.seats }}<br>
+                                                        Coffee Price: {{ cafe.coffee_price }}<br>
+
+                                                        {% if cafe.has_wifi %}Wi-Fi ✔{% endif %}
+                                                        {% if cafe.has_sockets %} | Sockets ✔{% endif %}
+                                                        {% if cafe.has_toilet %} | Toilet ✔{% endif %}
+                                                        {% if cafe.can_take_calls %} | Calls ✔{% endif %}
+                                                    </p>
+
+                                                    <a href="{{ cafe.map_url }}" target="_blank" class="btn btn-primary btn-sm">View on Map</a>
+                                                </div>
                                             </div>
                                         </div>
+                                        {% endfor %}
                                     </div>
-                                    {% endfor %}
                                 </div>
-                            </div>
-                        </div>
-                    {% elif view_type == 'map' %}
-                        <div id="map" style="height: 600px; width: 100%;"></div>
-                    {% endif %}
-                {% else %}
-                    {% if request.method == 'POST' %}
-                        <p class="mt-4">No cafés found for your search criteria.</p>
-                    {% endif %}
-                {% endif %}
+                            {% endif %}
+
+
+
+                        {% else %}
+                            {% if request.method == 'POST' %}
+                                <p class="mt-4">No cafés found for your search criteria.</p>
+                            {% endif %}
+                        {% endif %}
+
+                    </div>
                 </div>
             </div>
         </div>
-    {% endblock %}
+
+        {% endblock %}
     </main>
 
     {% include 'footer.html' %}
 
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top">
+        <i class="fa fa-angle-double-up"></i>
+    </a>
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
-
-    <!-- JavaScript Libraries -->
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
     <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
     <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
     <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
@@ -175,11 +209,9 @@
     <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
-    <!-- Contact Javascript File -->
     <script src="{{ url_for('static', filename='mail/jqBootstrapValidation.min.js') }}"></script>
     <script src="{{ url_for('static', filename='mail/contact.js') }}"></script>
 
-    <!-- Template Javascript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 

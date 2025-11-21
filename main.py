@@ -42,6 +42,7 @@ def home():
 def search():
     cafes = []
     selected_region = request.form.get("region")
+    view_type = request.args.get("view_type", "grid")
 
     query = Cafe.query
 
@@ -74,8 +75,7 @@ def search():
             query = query.filter(Cafe.coffee_price.cast(db.Float) <= float(max_price))
 
         cafes = query.all()
-
-    return render_template("search.html", cafes=cafes)
+    return render_template("search.html", cafes=cafes, view_type=view_type)
 
 @app.route('/service')
 def service():
