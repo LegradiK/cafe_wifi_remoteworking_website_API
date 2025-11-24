@@ -9,7 +9,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirnam
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY')
 db = SQLAlchemy(app)
 Bootstrap5(app)
-google_maps_api_key = os.environ.get("GOOGLE_MAPS_API_KEY")
 
 class Cafe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,13 +35,12 @@ REGION_MAP = {
 # all Flask routes below
 @app.route("/")
 def home():
-    return render_template("index.html", google_maps_api_key=google_maps_api_key)
+    return render_template("index.html")
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
     cafes = []
     selected_region = request.form.get("region")
-    view_type = request.args.get("view_type", "grid")  # "grid" or "map"
 
     query = Cafe.query
 
@@ -89,7 +87,14 @@ def search():
                 "location": cafe.location,
                 "img_url": cafe.img_url,
                 "lat": lat,
-                "lng": lng
+                "lng": lng,
+                "seats": cafe.seats,
+                "coffee_price": cafe.coffee_price,
+                "has_wifi": cafe.has_wifi,
+                "has_sockets": cafe.has_sockets,
+                "has_toilet": cafe.has_toilet,
+                "can_take_calls": cafe.can_take_calls,
+                "map_url": cafe.map_url
             })
         except Exception as e:
             # Skip cafes with invalid URLs
@@ -97,9 +102,7 @@ def search():
 
     return render_template(
         "search.html",
-        cafes=cafes_data,
-        view_type=view_type,
-        google_maps_api_key=google_maps_api_key
+        cafes=cafes_data
     )
 
 @app.route('/service')

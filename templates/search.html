@@ -130,23 +130,13 @@
                                     <input type="hidden" name="has_toilet" value="{{ 'on' if request.form.get('has_toilet') else '' }}">
                                     <input type="hidden" name="can_take_calls" value="{{ 'on' if request.form.get('can_take_calls') else '' }}">
 
-                                    <div class="btn-group">
-                                        <button name="view_type" value="grid" class="btn btn-outline-primary {% if view_type == 'grid' %}active{% endif %}">
-                                            Grid
-                                        </button>
-                                        <button name="view_type" value="map" class="btn btn-outline-primary {% if view_type == 'map' %}active{% endif %}">
-                                            Map
-                                        </button>
-                                    </div>
                                 </form>
 
                             </div>
 
-                            <!-- GRID VIEW -->
-                            {% if view_type == 'grid' %}
-                                <div class="container mt-4">
-                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5 mt-3">
-                                        {% for cafe in cafes %}
+                            <div class="container mt-4">
+                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5 mt-3">
+                                    {% for cafe in cafes %}
                                         <div class="col">
                                             <div class="card h-100 shadow-sm">
                                                 <div class="card-img-top"
@@ -171,13 +161,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {% endfor %}
-                                    </div>
+                                    {% endfor %}
                                 </div>
-                            {% endif %}
-
-
-
+                            </div>
                         {% else %}
                             {% if request.method == 'POST' %}
                                 <p class="mt-4">No cafés found for your search criteria.</p>

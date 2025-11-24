@@ -44,53 +44,54 @@
 
     {% block content %}
 
-    <!-- Testimonial Start -->
+     <!-- Testimonial Start -->
     <div class="container-fluid py-5">
         <div class="container">
             <div class="section-title">
                 <h4 class="text-primary text-uppercase" style="letter-spacing: 5px;">Testimonial</h4>
                 <h1 class="display-4">Our Clients Say</h1>
+                <p><i><b>Please note:</b> The testimonials shown here are sample reviews created solely for illustrative purposes. They do not represent real users or actual feedback.</b></i></p>
             </div>
             <div class="owl-carousel testimonial-carousel">
                 <div class="testimonial-item">
                     <div class="d-flex align-items-center mb-3">
                         <img class="img-fluid" src="{{ url_for('static', filename='img/testimonial-1.jpg') }}" alt="">
                         <div class="ml-3">
-                            <h4>Client Name</h4>
-                            <i>Profession</i>
+                            <h4>Amelia P</h4>
+                            <i>Freelance Writer</i>
                         </div>
                     </div>
-                    <p class="m-0">Sed ea amet kasd elitr stet, stet rebum et ipsum est duo elitr eirmod clita lorem. Dolor tempor ipsum sanct clita</p>
+                    <p class="m-0">This platform has been a game changer for my workflow. Instead of wandering around London hoping to find a decent café, I can now quickly filter by Wi-Fi speed, plug sockets, and noise levels. I’ve discovered so many great work-friendly spots thanks to this site.</p>
                 </div>
                 <div class="testimonial-item">
                     <div class="d-flex align-items-center mb-3">
                         <img class="img-fluid" src="{{ url_for('static', filename='img/testimonial-2.jpg') }}" alt="">
                         <div class="ml-3">
-                            <h4>Client Name</h4>
-                            <i>Profession</i>
+                            <h4>John D</h4>
+                            <i>Software Engineer</i>
                         </div>
                     </div>
-                    <p class="m-0">Sed ea amet kasd elitr stet, stet rebum et ipsum est duo elitr eirmod clita lorem. Dolor tempor ipsum sanct clita</p>
+                    <p class="m-0">Brilliant idea and super easy to use. I travel a lot for work, and finding places with reliable Wi-Fi used to be a nightmare. This platform gives accurate, detailed information so I know exactly where I can take calls or sit for a few hours without stress.</p>
                 </div>
                 <div class="testimonial-item">
                     <div class="d-flex align-items-center mb-3">
                         <img class="img-fluid" src="{{ url_for('static', filename='img/testimonial-3.jpg') }}" alt="">
                         <div class="ml-3">
-                            <h4>Client Name</h4>
-                            <i>Profession</i>
+                            <h4>Olivia M</h4>
+                            <i>Content Creator</i>
                         </div>
                     </div>
-                    <p class="m-0">Sed ea amet kasd elitr stet, stet rebum et ipsum est duo elitr eirmod clita lorem. Dolor tempor ipsum sanct clita</p>
+                    <p class="m-0">Honestly, this site has transformed my remote working days. The reviews are spot on, and the map view makes it incredibly easy to find cafés near wherever I happen to be. I recommend it to every freelancer I meet.</p>
                 </div>
                 <div class="testimonial-item">
                     <div class="d-flex align-items-center mb-3">
                         <img class="img-fluid" src="{{ url_for('static', filename='img/testimonial-4.jpg') }}" alt="">
                         <div class="ml-3">
-                            <h4>Client Name</h4>
-                            <i>Profession</i>
+                            <h4>Daniel S</h4>
+                            <i>Entrepreneur</i>
                         </div>
                     </div>
-                    <p class="m-0">Sed ea amet kasd elitr stet, stet rebum et ipsum est duo elitr eirmod clita lorem. Dolor tempor ipsum sanct clita</p>
+                    <p class="m-0">The platform is clean, intuitive, and genuinely useful. I love being able to see which cafés have good lighting and plenty of outlets. It saves me time and helps me choose the right spot for meetings or focused work.
                 </div>
             </div>
         </div>
@@ -109,19 +110,19 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="{{url_for('static', filename='lib/easing/easing.min.js')}}"></script>
+    <script src="{{url_for('static', filename='lib/waypoints/waypoints.min.js')}}"></script>
+    <script src="{{url_for('static', filename='lib/owlcarousel/owl.carousel.min.js')}}"></script>
+    <script src="{{url_for('static', filename='lib/tempusdominus/js/moment.min.js')}}"></script>
+    <script src="{{url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
+    <script src="{{url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 
     <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
+    <script src="{{url_for('static', filename='mail/jqBootstrapValidation.min.js')}}"></script>
+    <script src="{{url_for('static', filename='mail/contact.js')}}"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="{{url_for('static', filename='js/main.js')}}"></script>
 </body>
 
 </html>
