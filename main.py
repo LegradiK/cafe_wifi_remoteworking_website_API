@@ -1,7 +1,8 @@
-from flask import Flask, render_template, redirect, url_for, request
+import os
+from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
-import os
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
@@ -31,6 +32,23 @@ REGION_MAP = {
     "west": ["Hammersmith", "Ealing", "Kensington", "South Kensington"],
     "central": ["Westminster", "Camden Town", "Holborn", "Soho", "Shoreditch", "Clerkenwell", "Borough", "London Bridge", "Bankside", "Barbican"]
 }
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)  # hashed password
+
+    def __repr__(self):
+        return f"<User {self.email}>"
+
+with app.app_context():
+    db.create_all()
+    # Sample data
+    if not User.query.first():
+        db.session.add(User(name="Alice Johnson", email="alice@example.com", password=generate_password_hash("password123")))
+        db.session.add(User(name="Bob Smith", email="bob@example.com", password=generate_password_hash("mypassword")))
+        db.session.commit()
 
 # all Flask routes below
 @app.route("/")
@@ -120,6 +138,45 @@ def about():
 @app.route('/menu')
 def menu():
     return render_template('menu.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password, password):
+            # Login successful
+            return redirect(url_for('dashboard'))
+        else:
+            # Login failed
+            flash('Invalid email or password', 'danger')
+            return redirect(url_for('login'))
+    return render_template('login_signup.html')
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        hashed_password = generate_password_hash(password)
+        new_user = User(
+            name=name,
+            email=email,
+            password=hashed_password
+            )
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Account created successfully! Please log in.', 'success')
+        return redirect(url_for('login'))
+    return render_template('login_signup.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)

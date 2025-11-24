@@ -15,6 +15,12 @@
                 <a href="{{ url_for('search') }}" class="nav-item nav-link">Search</a>
                 <a href="{{ url_for('testimonial') }}" class="nav-item nav-link">Reviews</a>
                 <a href="{{ url_for('contact') }}" class="nav-item nav-link">Contact</a>
+                {% if session.user_id %}
+                    <p>{{ session.user_id }}</p>
+                    <a href="{{ url_for('logout') }}" class="nav-item nav-link">Log Out</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="nav-item nav-link">Log In / Sign Up</a>
+                {% endif %}
             </div>
         </div>
     </nav>
