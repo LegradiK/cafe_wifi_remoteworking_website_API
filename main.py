@@ -3,13 +3,16 @@ from flask import Flask, render_template, redirect, url_for, request, flash, ses
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
 
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(__file__), 'cafes.db')}"
-app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY')
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev_secret_key')
 db = SQLAlchemy(app)
 Bootstrap5(app)
+
 
 class Cafe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -147,6 +150,7 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             # Login successful
+            session['user_name'] = user.name
             return redirect(url_for('dashboard'))
         else:
             # Login failed
@@ -160,23 +164,36 @@ def signup():
         name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+
+        if password != confirm_password:
+            flash("Passwords do not match.", "danger")
+            return redirect(url_for('signup'))
+
+        # Optional: check if user already exists
+        if User.query.filter_by(email=email).first():
+            flash("Email already registered. Please log in.", "warning")
+            return redirect(url_for('login'))
+
         hashed_password = generate_password_hash(password)
-        new_user = User(
-            name=name,
-            email=email,
-            password=hashed_password
-            )
+        new_user = User(name=name, email=email, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         flash('Account created successfully! Please log in.', 'success')
         return redirect(url_for('login'))
+
     return render_template('login_signup.html')
+
 
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
