@@ -151,6 +151,7 @@ def login():
         if user and check_password_hash(user.password, password):
             # Login successful
             session['user_name'] = user.name
+            session['user_id'] = user.id
             return redirect(url_for('dashboard'))
         else:
             # Login failed
@@ -188,12 +189,55 @@ def signup():
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
+    session.pop('user_name', None)
     flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
 
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route("/add-cafe", methods=["GET", "POST"])
+def add_cafe():
+    if request.method == "POST":
+        name = request.form.get("name")
+        location = request.form.get("location")
+        address = request.form.get("address")
+        map_url = request.form.get("map_url")
+        seats = request.form.get("seats")
+        coffee_price = request.form.get("coffee_price")
+        has_sockets = bool(request.form.get("has_sockets"))
+        has_toilet = bool(request.form.get("has_toilet"))
+        can_take_calls = bool(request.form.get("can_take_calls"))
+
+        # Image upload
+        file = request.files.get("img_url")
+        if file:
+            img_path = os.path.join("static/cafe_images", file.filename)
+            file.save(img_path)
+            img_url = img_path
+        else:
+            img_url = ""
+
+        new_cafe = Cafe(
+            name=name,
+            location=location,
+            map_url=map_url,
+            img_url=img_url,
+            seats=seats,
+            coffee_price=coffee_price,
+            has_sockets=has_sockets,
+            has_toilet=has_toilet,
+            can_take_calls=can_take_calls
+        )
+
+        db.session.add(new_cafe)
+        db.session.commit()
+        flash("Cafe added successfully!", "success")
+        return redirect(url_for("search"))
+
+    return render_template("add_cafe.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
