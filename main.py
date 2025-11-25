@@ -213,6 +213,10 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
 
+@app.route('/member')
+def member_page():
+    return render_template('membership.html')
+
 @app.route("/add_cafe", methods=["GET", "POST"])
 def add_cafe():
     if request.method == "POST":

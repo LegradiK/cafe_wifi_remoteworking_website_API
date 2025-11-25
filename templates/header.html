@@ -26,6 +26,7 @@
                 <a href="{{ url_for('about') }}" class="nav-item nav-link">About</a>
                 <a href="{{ url_for('service') }}" class="nav-item nav-link">Service</a>
                 <a href="{{ url_for('search') }}" class="nav-item nav-link">Search</a>
+                <a href="{{ url_for('member_page')}}" class="nav-item nav-link">Membership</a>
                 <a href="{{ url_for('testimonial') }}" class="nav-item nav-link">Reviews</a>
                 <a href="{{ url_for('contact') }}" class="nav-item nav-link">Contact</a>
                 {% if session.get('user_id') %}

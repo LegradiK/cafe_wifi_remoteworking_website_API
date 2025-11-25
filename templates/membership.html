@@ -39,6 +39,48 @@
         </div>
 
         {% block content %}
+        <!-- membership Start -->
+            <div class="container-fluid py-5">
+                <div class="container">
+                    <div class="section-title">
+                        <h4 class="text-primary text-uppercase" style="letter-spacing: 5px;">Our Community</h4>
+                        <h1 class="display-4">Join Our Café Community</h1>
+                        <p class="lead text-muted">Discover, share, and add your favourite cafés across London!</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 py-5 px-lg-4">
+                            <h1 class="mb-3">Why Join Us?</h1>
+                            <p>Share and discover the best cafés in London while supporting local spots and connecting with fellow remote workers and café lovers.<</p>
+                            <h5 class="mb-4"><i class="fa fa-check text-primary mr-3"></i>Connect with café enthusiasts</h5>
+                            <h5 class="mb-4"><i class="fa fa-check text-primary mr-3"></i>Support local independent cafés</h5>
+                            <h5 class="mb-4"><i class="fa fa-check text-primary mr-3"></i>Discover hidden gems and cozy spots</h5>
+                            <h5 class="mb-4"><i class="fa fa-check text-primary mr-3"></i>Share your favourite cafés</h5>
+                            <h5 class="mb-4"><i class="fa fa-check text-primary mr-3"></i>Completely free to join</h5>
+                        </div>
+                        <div class="col-lg-4 py-5 py-lg-0" style="min-height: 500px;">
+                            <div class="position-relative h-100">
+                                <img class="position-absolute w-100 h-100" src="{{ url_for('static', filename='img/cafe_pic2.jpg') }}" style="object-fit: cover;">
+                            </div>
+                        </div>
+                        <div class="col-lg-4 py-0 py-lg-5">
+                            <h1 class="mb-3">Are you ready to join?</h1>
+                            <p>Start sharing your favourite cafés with fellow café lovers and remote workers,
+                                and help support London’s local cafés!</p>
+
+                            <!-- Conditional Call to Action -->
+                            <div class="mt-4">
+                                {% if 'user_id' in session %}
+                                    <a href="{{ url_for('add_cafe') }}" class="btn btn-primary btn-lg">Add Your Favourite Café</a>
+                                {% else %}
+                                    <a href="{{ url_for('signup') }}" class="btn btn-success btn-lg mr-3">Sign Up</a>
+                                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Log In</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- membership End -->
 
         {% endblock %}
 
