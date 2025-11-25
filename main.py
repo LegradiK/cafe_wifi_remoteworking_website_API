@@ -27,6 +27,9 @@ class Cafe(db.Model):
     # Optional fields
     seats = db.Column(db.String(250))
     coffee_price = db.Column(db.String(50))
+    # Foreign key to the user who added the cafe
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # NEW
+    user = db.relationship('User', backref='cafes')
 
 REGION_MAP = {
     "north": ["Haringey", "Islington", "Camden", "Barnet"],
@@ -249,7 +252,8 @@ def add_cafe():
             has_wifi=has_wifi,
             has_sockets=has_sockets,
             has_toilet=has_toilet,
-            can_take_calls=can_take_calls
+            can_take_calls=can_take_calls,
+            user_id=session['user_id']  # attach user ID
         )
 
         db.session.add(new_cafe)
@@ -258,6 +262,40 @@ def add_cafe():
         return redirect(url_for("search"))
 
     return render_template("member_page.html")
+
+@app.route("/my_cafes")
+def my_cafes():
+    if 'user_id' not in session:
+        flash("Please log in to view your cafés.", "warning")
+        return redirect(url_for('login'))
+
+    user_cafes = Cafe.query.filter_by(user_id=session['user_id']).all()
+
+    cafes_data = []
+    for cafe in user_cafes:
+        try:
+            coords_part = cafe.map_url.split("/@")[1].split(",")
+            lat = float(coords_part[0])
+            lng = float(coords_part[1])
+            cafes_data.append({
+                "id": cafe.id,
+                "name": cafe.name,
+                "location": cafe.location,
+                "img_url": cafe.img_url if cafe.img_url else url_for('static', filename='img/placeholder.png'),
+                "lat": lat,
+                "lng": lng,
+                "seats": cafe.seats,
+                "coffee_price": cafe.coffee_price,
+                "has_wifi": cafe.has_wifi,
+                "has_sockets": cafe.has_sockets,
+                "has_toilet": cafe.has_toilet,
+                "can_take_calls": cafe.can_take_calls,
+                "map_url": cafe.map_url
+            })
+        except Exception:
+            continue  # skip cafés with invalid URLs
+
+    return render_template("my_cafes.html", cafes=cafes_data)
 
 
 if __name__ == '__main__':
