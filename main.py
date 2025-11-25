@@ -33,7 +33,7 @@ REGION_MAP = {
     "south": ["Lambeth", "Southwark", "Greenwich", "Croydon", "Peckham", "Bermondsey"],
     "east": ["Hackney", "Tower Hamlets", "Whitechapel"],
     "west": ["Hammersmith", "Ealing", "Kensington", "South Kensington"],
-    "central": ["Westminster", "Camden Town", "Holborn", "Soho", "Shoreditch", "Clerkenwell", "Borough", "London Bridge", "Bankside", "Barbican"]
+    "central": ["Euston", "Westminster", "Camden Town", "Holborn", "Soho", "Shoreditch", "Clerkenwell", "Borough", "London Bridge", "Bankside", "Barbican", "Russel Square"]
 }
 
 class User(db.Model):
@@ -95,36 +95,56 @@ def search():
 
     cafes = query.all()
 
-    # Extract coordinates from map_url
+    # --- Coordinate extraction helper ---
+    def extract_coords(url: str):
+        """
+        Extract coordinates from ANY Google Maps URL.
+        Returns (lat, lng) or (None, None)
+        """
+        import re
+
+        # 1: Standard format .../@lat,lng,zoom
+        m = re.search(r"/@([-0-9.]+),([-0-9.]+)", url)
+        if m:
+            return float(m.group(1)), float(m.group(2))
+
+        # 2: Search format ...?q=lat,lng
+        m = re.search(r"q=([-0-9.]+),([-0-9.]+)", url)
+        if m:
+            return float(m.group(1)), float(m.group(2))
+
+        # 3: Place URLs sometimes contain !3dLAT!4dLNG
+        m = re.search(r"!3d([-0-9.]+)!4d([-0-9.]+)", url)
+        if m:
+            return float(m.group(1)), float(m.group(2))
+
+        return None, None
+
+    # --- Build the results list ---
     cafes_data = []
     for cafe in cafes:
-        try:
-            coords_part = cafe.map_url.split("/@")[1].split(",")
-            lat = float(coords_part[0])
-            lng = float(coords_part[1])
-            cafes_data.append({
-                "id": cafe.id,
-                "name": cafe.name,
-                "location": cafe.location,
-                "img_url": cafe.img_url,
-                "lat": lat,
-                "lng": lng,
-                "seats": cafe.seats,
-                "coffee_price": cafe.coffee_price,
-                "has_wifi": cafe.has_wifi,
-                "has_sockets": cafe.has_sockets,
-                "has_toilet": cafe.has_toilet,
-                "can_take_calls": cafe.can_take_calls,
-                "map_url": cafe.map_url
-            })
-        except Exception as e:
-            # Skip cafes with invalid URLs
-            continue
+        lat, lng = extract_coords(cafe.map_url)
 
-    return render_template(
-        "search.html",
-        cafes=cafes_data
-    )
+        img = cafe.img_url if cafe.img_url else url_for("static", filename="img/cafe_pic.jpg")
+
+        cafes_data.append({
+            "id": cafe.id,
+            "name": cafe.name,
+            "location": cafe.location,
+            "img_url": img,
+            "lat": lat,
+            "lng": lng,
+            "seats": cafe.seats,
+            "coffee_price": cafe.coffee_price,
+            "has_wifi": cafe.has_wifi,
+            "has_sockets": cafe.has_sockets,
+            "has_toilet": cafe.has_toilet,
+            "can_take_calls": cafe.can_take_calls,
+            "map_url": cafe.map_url
+        })
+
+    return render_template("search.html", cafes=cafes_data)
+
 
 @app.route('/service')
 def service():
@@ -152,7 +172,7 @@ def login():
             # Login successful
             session['user_name'] = user.name
             session['user_id'] = user.id
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('add_cafe'))
         else:
             # Login failed
             flash('Invalid email or password', 'danger')
@@ -193,19 +213,15 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
 
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
-
-@app.route("/add-cafe", methods=["GET", "POST"])
+@app.route("/add_cafe", methods=["GET", "POST"])
 def add_cafe():
     if request.method == "POST":
         name = request.form.get("name")
         location = request.form.get("location")
-        address = request.form.get("address")
         map_url = request.form.get("map_url")
         seats = request.form.get("seats")
         coffee_price = request.form.get("coffee_price")
+        has_wifi = bool(request.form.get("has_wifi"))
         has_sockets = bool(request.form.get("has_sockets"))
         has_toilet = bool(request.form.get("has_toilet"))
         can_take_calls = bool(request.form.get("can_take_calls"))
@@ -226,6 +242,7 @@ def add_cafe():
             img_url=img_url,
             seats=seats,
             coffee_price=coffee_price,
+            has_wifi=has_wifi,
             has_sockets=has_sockets,
             has_toilet=has_toilet,
             can_take_calls=can_take_calls
@@ -236,7 +253,7 @@ def add_cafe():
         flash("Cafe added successfully!", "success")
         return redirect(url_for("search"))
 
-    return render_template("add_cafe.html")
+    return render_template("member_page.html")
 
 
 if __name__ == '__main__':

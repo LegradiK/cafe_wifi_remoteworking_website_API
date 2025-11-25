@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>London Cafe listings</title>
+    <title>London Café listings</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
@@ -51,8 +51,8 @@
                         <form method="POST">
                             <div class="row mb-4">
                                 <div class="col-md-4 mb-3">
-                                    <label for="name" class="form-label">Cafe Name</label>
-                                    <input type="text" id="name" class="form-control form-control-lg" name="name" placeholder="Enter Cafe Name">
+                                    <label for="name" class="form-label">Café Name</label>
+                                    <input type="text" id="name" class="form-control form-control-lg" name="name" placeholder="Enter Café Name">
                                 </div>
 
                                 <div class="col-md-3 mb-3">
@@ -114,6 +114,17 @@
                         </form>
 
                         <!-- RESULTS SECTION -->
+                        <div class="mt-4">
+                            <p>
+                                {% if cafes %}
+                                    <strong>{{ cafes|length }}</strong> café{{ cafes|length > 1 and 's' or '' }} found
+                                {% else %}
+                                    No cafés found — please try different filters
+                                {% endif %}
+                            </p>
+                        </div>
+
+
                         {% if cafes %}
 
                             <!-- GRID / MAP TOGGLE -->
