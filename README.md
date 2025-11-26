@@ -171,7 +171,7 @@ These can be customised in REGION_MAP.
 
    - /edit_cafe/<int:cafe_id> — Edit cafés added by the user
 
-   These routes check session['user_id'] before allowing access.
+   *These routes check session['user_id'] before allowing access.*
 
 -  Public pages like /, /search, /about, /menu, /contact are accessible without login.
 
