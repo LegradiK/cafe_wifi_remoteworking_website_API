@@ -104,7 +104,7 @@ project/
 │   └── (other template pages)
 │
 ├── cafes.db
-├── app.py
+├── main.py
 ├── requirements.txt
 └── README.md
 ```
