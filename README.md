@@ -163,7 +163,17 @@ These can be customised in REGION_MAP.
 
 - Image uploads are stored in static/cafe_images.
 
-- All routes requiring authentication check session['user_id'].
+- Authentication is required only for member-only pages, such as:
+
+   - /add_cafe — Add a new café
+
+   - /my_cafes — View user’s cafés
+
+   - /edit_cafe/<int:cafe_id> — Edit cafés added by the user
+
+   - These routes check session['user_id'] before allowing access.
+
+-  Public pages like /, /search, /about, /menu, /contact are accessible without login.
 
 - Bootstrap 5 provides styling across all pages.
 
