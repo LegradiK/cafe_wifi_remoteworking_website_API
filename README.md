@@ -1,9 +1,197 @@
-website template
+# ☕ London Café Finder — Flask Web App
 
-https://themewagon.com/themes/free-bootstrap-travel-directory-template/?utm_source=chatgpt.com
+A web application that helps users discover, save, and manage their favourite cafés across London.
+Users can search by region and amenities, create accounts, upload cafés they love, and edit their previously added entries.
 
-<a href="https://www.freepik.com/free-photo/top-view-laptop-dessert-table_34540075.htm#fromView=keyword&page=2&position=0&uuid=bf6ed185-cb7d-4ebf-ba90-c32d469c1caf&query=Coffee+logo+mockup">Image by freepik</a>
+## 🌟 Features
+### 🔍 Search Cafés
 
+Users can search cafés by:
+
+Name
+
+Region (North, South, East, West, Central London)
+
+WiFi availability
+
+Power sockets
+
+Toilets
+
+Call-friendly environment
+
+Minimum seats
+
+Maximum coffee price
+
+Search results include:
+
+Café image
+
+Google Maps link
+
+Coordinates extracted automatically from Google Maps URLs
+
+Amenities and seating information
+
+### 👤 User Accounts
+
+Secure registration with password hashing
+
+Login and logout
+
+Sessions maintained via Flask session
+
+### ➕ Add & Manage Your Cafés
+
+Logged-in users can:
+
+Add new cafés
+
+Upload an optional image
+
+Save Google Maps links (coordinates are auto-extracted)
+
+Edit previously added cafés
+
+View a personalised My Cafés dashboard
+
+Each café entry is linked to the user who created it.
+
+### 🛠 Tech Stack
+
+Backend:
+
+Flask
+
+Flask SQLAlchemy
+
+Werkzeug Security
+
+Python Dotenv
+
+Flask Bootstrap 5
+
+Database:
+
+SQLite
+
+Frontend:
+
+HTMLCodex "Koppee" Coffee Shop Template
+
+Bootstrap 5
+
+Customised Jinja templates
+
+## 📁 Project Structure (simplified)
+project/
+│
+├── static/
+│   ├── cafe_images/
+│   ├── css/
+│   ├── js/
+│   └── img/
+│
+├── templates/
+│   ├── index.html
+│   ├── search.html
+│   ├── login_signup.html
+│   ├── add_cafe.html
+│   ├── edit_cafe.html
+│   ├── my_cafes.html
+│   └── (other template pages)
+│
+├── cafes.db
+├── app.py
+├── requirements.txt
+└── README.md
+
+## ⚙️ Installation & Setup
+1. Clone the repository
+git clone <your-repo-url>
+cd <your-repo-folder>
+
+2. Create a virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate     # Linux/macOS
+venv\Scripts\activate        # Windows
+
+3. Install dependencies
+pip install -r requirements.txt
+
+4. Create environment variable file
+
+Create a .env file:
+
+FLASK_SECRET_KEY=your_secret_key_here
+
+5. Run the application
+python app.py
+
+
+The site will be available at:
+
+http://127.0.0.1:5000
+
+## 🗺 Regions Covered
+
+The app currently supports London regions used for filtering:
+
+North — Haringey, Islington, Camden, Barnet
+
+South — Lambeth, Southwark, Greenwich, Croydon, Peckham, Bermondsey
+
+East — Hackney, Tower Hamlets, Whitechapel
+
+West — Hammersmith, Ealing, Kensington, South Kensington
+
+Central — Soho, Shoreditch, Westminster, Holborn, etc.
+
+These can be customised in REGION_MAP.
+
+## 🧠 How the App Works (Code Summary)
+
+Users and cafés are stored in SQLite using SQLAlchemy models.
+
+Each Café has a user_id linking it to the creator.
+
+Google Maps URLs are parsed using a regex function to extract coordinates.
+
+Image uploads are stored in static/cafe_images.
+
+All routes requiring authentication check session['user_id'].
+
+Bootstrap 5 provides styling across all pages.
+
+## 🖼 Credits
+## Website Template
+
+Template Name: KOPPEE – Coffee Shop HTML Template
+
+Template Link: https://htmlcodex.com/coffee-shop-html-template
+
+Template Licence: https://htmlcodex.com/license
+
+Template Author: HTML Codex
+
+Author Website: https://htmlcodex.com
+
+About HTML Codex:
+HTML Codex is a major publisher of free and premium HTML templates, landing pages, email templates, and snippets.
+Read more at: https://htmlcodex.com/about-us
+
+## Photos
+
+Afta Putta Gunawan
 https://www.pexels.com/photo/assorted-decors-with-brown-rack-inside-store-683039/
 
+Ahmet Yüksek
 https://www.pexels.com/photo/cozy-winter-latte-in-graz-austria-29784884/
+
+## 📜 Licence
+
+This project uses the Koppee HTML Template under the HTML Codex commercial licence.
+Ensure compliance with their licence terms when modifying or deploying the template.
+
+Your custom Flask backend code is free to use and modify as you wish.
