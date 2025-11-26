@@ -183,10 +183,10 @@ Read more at: https://htmlcodex.com/about-us
 
 ## Photos
 
-Afta Putta Gunawan
+- Afta Putta Gunawan
 https://www.pexels.com/photo/assorted-decors-with-brown-rack-inside-store-683039/
 
-Ahmet Yüksek
+- Ahmet Yüksek
 https://www.pexels.com/photo/cozy-winter-latte-in-graz-austria-29784884/
 
 ## 📜 Licence
