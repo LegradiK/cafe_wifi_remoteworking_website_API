@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>London Cafe listings</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free Website Template" name="keywords">
+    <meta content="Free Website Template" name="description">
+
+    <!-- Favicon -->
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ url_for('static', filename='css/style.min.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <main class="flex-fill">
+        <!-- Page Header Start -->
+        <div class="container-fluid page-header mb-5 position-relative overlay-bottom">
+            <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+                <h1 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase">My Cafés</h1>
+                <div class="d-inline-flex mb-lg-5">
+                    <p class="m-0 text-white"><a class="text-white" href="{{ url_for('home') }}">Home</a></p>
+                    <p class="m-0 text-white px-2">/</p>
+                    <p class="m-0 text-white">My Cafés</p>
+                </div>
+            </div>
+        </div>
+    <!-- Page Header End -->
+        {% block content %}
+
+        <div class="container mt-5">
+            <h2 class="mb-4 text-center">My Cafés</h2>
+
+            {% if cafes %}
+                <div class="container mt-4">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5 mt-3">
+                    {% for cafe in cafes %}
+                        <div class="col">
+                            <div class="card h-100 shadow-sm">
+                            <img src="{{ cafe.img_url }}" class="card-img-top" style="height: 250px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ cafe.name }}</h5>
+                                <p class="card-text">
+                                    <strong>Location:</strong> {{ cafe.location }}<br>
+                                    <strong>Seats:</strong> {{ cafe.seats or 'N/A' }}<br>
+                                    <strong>Coffee Price:</strong> £{{ cafe.coffee_price or 'N/A' }}<br>
+                                    {% if cafe.has_wifi %} WiFi ✔{% endif %}
+                                    {% if cafe.has_sockets %} Sockets ✔{% endif %}
+                                    {% if cafe.has_toilet %} Toilet ✔{% endif %}
+                                    {% if cafe.can_take_calls %} Calls ✔{% endif %}
+                                </p>
+                                <a href="{{ cafe.map_url }}" target="_blank" class="btn btn-sm btn-primary mb-2">View on Map</a>
+                                <a href="{{ url_for('edit_cafe', cafe_id=cafe.id) }}" class="btn btn-sm btn-outline-secondary mb-2">Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-center">You haven't added any cafés yet. <a href="{{ url_for('add_cafe') }}">Add one now!</a></p>
+            {% endif %}
+        </div>
+
+
+
+        {% endblock %}
+    </main>
+
+    {% include 'footer.html' %}
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top">
+        <i class="fa fa-angle-double-up"></i>
+    </a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="{{ url_for('static', filename='mail/jqBootstrapValidation.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='mail/contact.js') }}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

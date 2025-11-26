@@ -39,6 +39,32 @@ REGION_MAP = {
     "central": ["Euston", "Westminster", "Camden Town", "Holborn", "Soho", "Shoreditch", "Clerkenwell", "Borough", "London Bridge", "Bankside", "Barbican", "Russel Square"]
 }
 
+import re
+
+def extract_coords(url: str):
+    """
+    Extract coordinates from ANY Google Maps URL.
+    Returns (lat, lng) or (None, None)
+    """
+
+    # 1: Standard format .../@lat,lng,zoom
+    m = re.search(r"/@([-0-9.]+),([-0-9.]+)", url)
+    if m:
+        return float(m.group(1)), float(m.group(2))
+
+    # 2: Search format ...?q=lat,lng
+    m = re.search(r"q=([-0-9.]+),([-0-9.]+)", url)
+    if m:
+        return float(m.group(1)), float(m.group(2))
+
+    # 3: Place URLs sometimes contain !3dLAT!4dLNG
+    m = re.search(r"!3d([-0-9.]+)!4d([-0-9.]+)", url)
+    if m:
+        return float(m.group(1)), float(m.group(2))
+
+    return None, None
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -98,31 +124,6 @@ def search():
 
     cafes = query.all()
 
-    # --- Coordinate extraction helper ---
-    def extract_coords(url: str):
-        """
-        Extract coordinates from ANY Google Maps URL.
-        Returns (lat, lng) or (None, None)
-        """
-        import re
-
-        # 1: Standard format .../@lat,lng,zoom
-        m = re.search(r"/@([-0-9.]+),([-0-9.]+)", url)
-        if m:
-            return float(m.group(1)), float(m.group(2))
-
-        # 2: Search format ...?q=lat,lng
-        m = re.search(r"q=([-0-9.]+),([-0-9.]+)", url)
-        if m:
-            return float(m.group(1)), float(m.group(2))
-
-        # 3: Place URLs sometimes contain !3dLAT!4dLNG
-        m = re.search(r"!3d([-0-9.]+)!4d([-0-9.]+)", url)
-        if m:
-            return float(m.group(1)), float(m.group(2))
-
-        return None, None
-
     # --- Build the results list ---
     cafes_data = []
     for cafe in cafes:
@@ -164,6 +165,9 @@ def about():
 @app.route('/menu')
 def menu():
     return render_template('menu.html')
+@app.route('/membership')
+def membership():
+    return render_template('membership.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -175,7 +179,7 @@ def login():
             # Login successful
             session['user_name'] = user.name
             session['user_id'] = user.id
-            return redirect(url_for('add_cafe'))
+            return redirect(url_for('my_cafes'))
         else:
             # Login failed
             flash('Invalid email or password', 'danger')
@@ -216,12 +220,12 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
 
-@app.route('/member')
-def member_page():
-    return render_template('membership.html')
-
 @app.route("/add_cafe", methods=["GET", "POST"])
 def add_cafe():
+    if 'user_id' not in session:
+        flash("Please log in to view your cafés.", "warning")
+        return redirect(url_for('login'))
+
     if request.method == "POST":
         name = request.form.get("name")
         location = request.form.get("location")
@@ -261,7 +265,7 @@ def add_cafe():
         flash("Cafe added successfully!", "success")
         return redirect(url_for("search"))
 
-    return render_template("member_page.html")
+    return render_template("add_cafe.html")
 
 @app.route("/my_cafes")
 def my_cafes():
@@ -273,30 +277,51 @@ def my_cafes():
 
     cafes_data = []
     for cafe in user_cafes:
-        try:
-            coords_part = cafe.map_url.split("/@")[1].split(",")
-            lat = float(coords_part[0])
-            lng = float(coords_part[1])
-            cafes_data.append({
-                "id": cafe.id,
-                "name": cafe.name,
-                "location": cafe.location,
-                "img_url": cafe.img_url if cafe.img_url else url_for('static', filename='img/placeholder.png'),
-                "lat": lat,
-                "lng": lng,
-                "seats": cafe.seats,
-                "coffee_price": cafe.coffee_price,
-                "has_wifi": cafe.has_wifi,
-                "has_sockets": cafe.has_sockets,
-                "has_toilet": cafe.has_toilet,
-                "can_take_calls": cafe.can_take_calls,
-                "map_url": cafe.map_url
-            })
-        except Exception:
-            continue  # skip cafés with invalid URLs
+        lat, lng = extract_coords(cafe.map_url)
+        img = cafe.img_url if cafe.img_url else url_for("static", filename="img/cafe_pic.jpg")
+        cafes_data.append({
+            "id": cafe.id,
+            "name": cafe.name,
+            "location": cafe.location,
+            "img_url": img,
+            "lat": lat,
+            "lng": lng,
+            "seats": cafe.seats,
+            "coffee_price": cafe.coffee_price,
+            "has_wifi": cafe.has_wifi,
+            "has_sockets": cafe.has_sockets,
+            "has_toilet": cafe.has_toilet,
+            "can_take_calls": cafe.can_take_calls,
+            "map_url": cafe.map_url
+        })
 
     return render_template("my_cafes.html", cafes=cafes_data)
 
+@app.route("/edit_cafe/<int:cafe_id>", methods=["GET", "POST"])
+def edit_cafe(cafe_id):
+    if 'user_id' not in session:
+        flash("Please log in to view your cafés.", "warning")
+        return redirect(url_for('login'))
+
+    cafe = Cafe.query.get_or_404(cafe_id)
+
+    if request.method == "POST":
+        cafe.name = request.form.get("name")
+        cafe.location = request.form.get("location")
+        cafe.map_url = request.form.get("map_url")
+        cafe.img_url = request.form.get("img_url")
+        cafe.seats = request.form.get("seats")
+        cafe.coffee_price = request.form.get("coffee_price")
+        cafe.has_wifi = bool(request.form.get("has_wifi"))
+        cafe.has_sockets = bool(request.form.get("has_sockets"))
+        cafe.has_toilet = bool(request.form.get("has_toilet"))
+        cafe.can_take_calls = bool(request.form.get("can_take_calls"))
+
+        db.session.commit()
+        flash("Cafe updated successfully!", "success")
+        return redirect(url_for("my_cafes"))
+
+    return render_template("edit_cafe.html", cafe=cafe)
 
 if __name__ == '__main__':
     app.run(debug=True)

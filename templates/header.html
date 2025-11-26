@@ -26,12 +26,19 @@
                 <a href="{{ url_for('about') }}" class="nav-item nav-link">About</a>
                 <a href="{{ url_for('service') }}" class="nav-item nav-link">Service</a>
                 <a href="{{ url_for('search') }}" class="nav-item nav-link">Search</a>
-                <a href="{{ url_for('member_page')}}" class="nav-item nav-link">Membership</a>
+                <a href="{{ url_for('membership')}}" class="nav-item nav-link">Membership</a>
                 <a href="{{ url_for('testimonial') }}" class="nav-item nav-link">Reviews</a>
                 <a href="{{ url_for('contact') }}" class="nav-item nav-link">Contact</a>
                 {% if session.get('user_id') %}
-                    <a href="{{ url_for('add_cafe') }}" class="nav-item nav-link">Add Cafe</a>
-                    <a href="{{ url_for('logout') }}" class="nav-item nav-link">Log Out</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Members</a>
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('add_cafe') }}" class="dropdown-item">Add Cafe</a>
+                            <a href="{{ url_for('my_cafes') }}" class="dropdown-item">My Cafes</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url_for('logout') }}" class="dropdown-item">Log Out</a>
+                        </div>
+                    </div>
                 {% else %}
                     <a href="{{ url_for('login') }}" class="nav-item nav-link">Log In / Sign Up</a>
                 {% endif %}
