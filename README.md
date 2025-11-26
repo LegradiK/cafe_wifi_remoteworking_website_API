@@ -85,6 +85,7 @@ Users can search by region and amenities, create accounts, upload cafés they lo
 - Customised Jinja templates
 
 ## 📁 Project Structure (simplified)
+```bash
 project/
 │
 ├── static/
@@ -106,32 +107,34 @@ project/
 ├── app.py
 ├── requirements.txt
 └── README.md
+```
 
 ## ⚙️ Installation & Setup
 1. Clone the repository
-git clone <your-repo-url>
-cd <your-repo-folder>
-
+```bash
+git clone https://github.com/LegradiK/cafe_wifi_remoteworking_website_API.git
+cd cafe_wifi_remoteworking_website_API
+```
 2. Create a virtual environment (recommended)
+```bash
 python3 -m venv venv
-source venv/bin/activate     # Linux/macOS
-venv\Scripts\activate        # Windows
-
+source venv/bin/activate     # Linux
+```
 3. Install dependencies
+```bash
 pip install -r requirements.txt
-
+```
 4. Create environment variable file
-
+```bash
 Create a .env file:
-
 FLASK_SECRET_KEY=your_secret_key_here
-
+```
 5. Run the application
+```bash
 python app.py
+```
 
-
-The site will be available at:
-
+*The site will be available at:*
 http://127.0.0.1:5000
 
 ## 🗺 Regions Covered
