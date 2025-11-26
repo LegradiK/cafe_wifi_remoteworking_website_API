@@ -6,83 +6,83 @@ Users can search by region and amenities, create accounts, upload cafés they lo
 ## 🌟 Features
 ### 🔍 Search Cafés
 
-Users can search cafés by:
+*Users can search cafés by:*
 
-Name
+- Name
 
-Region (North, South, East, West, Central London)
+- Region (North, South, East, West, Central London)
 
-WiFi availability
+- WiFi availability
 
-Power sockets
+- Power sockets
 
-Toilets
+- Toilets
 
-Call-friendly environment
+- Call-friendly environment
 
-Minimum seats
+- Minimum seats
 
-Maximum coffee price
+- Maximum coffee price
 
-Search results include:
+*Search results include:*
 
-Café image
+- Café image
 
-Google Maps link
+- Google Maps link
 
-Coordinates extracted automatically from Google Maps URLs
+- Coordinates extracted automatically from Google Maps URLs
 
-Amenities and seating information
+- Amenities and seating information
 
 ### 👤 User Accounts
 
-Secure registration with password hashing
+- Secure registration with password hashing
 
-Login and logout
+- Login and logout
 
-Sessions maintained via Flask session
+- Sessions maintained via Flask session
 
 ### ➕ Add & Manage Your Cafés
 
-Logged-in users can:
+- Logged-in users can:
 
-Add new cafés
+- Add new cafés
 
-Upload an optional image
+- Upload an optional image
 
-Save Google Maps links (coordinates are auto-extracted)
+- Save Google Maps links (coordinates are auto-extracted)
 
-Edit previously added cafés
+- Edit previously added cafés
 
-View a personalised My Cafés dashboard
+- View a personalised My Cafés dashboard
 
-Each café entry is linked to the user who created it.
+- Each café entry is linked to the user who created it.
 
 ### 🛠 Tech Stack
 
-Backend:
+**Backend:**
 
-Flask
+- Flask
 
-Flask SQLAlchemy
+- Flask SQLAlchemy
 
-Werkzeug Security
+- Werkzeug Security
 
-Python Dotenv
+- Python Dotenv
 
-Flask Bootstrap 5
+- Flask Bootstrap 5
 
-Database:
+**Database:**
 
-SQLite
+- SQLite
 
-Frontend:
+**Frontend:**
 
-HTMLCodex "Koppee" Coffee Shop Template
+- HTMLCodex "Koppee" Coffee Shop Template
 
-Bootstrap 5
+- Bootstrap 5
 
-Customised Jinja templates
+- Customised Jinja templates
 
 ## 📁 Project Structure (simplified)
 project/
@@ -138,46 +138,46 @@ http://127.0.0.1:5000
 
 The app currently supports London regions used for filtering:
 
-North — Haringey, Islington, Camden, Barnet
+- North — Haringey, Islington, Camden, Barnet
 
-South — Lambeth, Southwark, Greenwich, Croydon, Peckham, Bermondsey
+- South — Lambeth, Southwark, Greenwich, Croydon, Peckham, Bermondsey
 
-East — Hackney, Tower Hamlets, Whitechapel
+- East — Hackney, Tower Hamlets, Whitechapel
 
-West — Hammersmith, Ealing, Kensington, South Kensington
+- West — Hammersmith, Ealing, Kensington, South Kensington
 
-Central — Soho, Shoreditch, Westminster, Holborn, etc.
+- Central — Soho, Shoreditch, Westminster, Holborn, etc.
 
 These can be customised in REGION_MAP.
 
 ## 🧠 How the App Works (Code Summary)
 
-Users and cafés are stored in SQLite using SQLAlchemy models.
+- Users and cafés are stored in SQLite using SQLAlchemy models.
 
-Each Café has a user_id linking it to the creator.
+- Each Café has a user_id linking it to the creator.
 
-Google Maps URLs are parsed using a regex function to extract coordinates.
+- Google Maps URLs are parsed using a regex function to extract coordinates.
 
-Image uploads are stored in static/cafe_images.
+- Image uploads are stored in static/cafe_images.
 
-All routes requiring authentication check session['user_id'].
+- All routes requiring authentication check session['user_id'].
 
-Bootstrap 5 provides styling across all pages.
+- Bootstrap 5 provides styling across all pages.
 
 ## 🖼 Credits
 ## Website Template
 
-Template Name: KOPPEE – Coffee Shop HTML Template
+- Template Name: KOPPEE – Coffee Shop HTML Template
 
-Template Link: https://htmlcodex.com/coffee-shop-html-template
+- Template Link: https://htmlcodex.com/coffee-shop-html-template
 
-Template Licence: https://htmlcodex.com/license
+- Template Licence: https://htmlcodex.com/license
 
-Template Author: HTML Codex
+- Template Author: HTML Codex
 
-Author Website: https://htmlcodex.com
+- Author Website: https://htmlcodex.com
 
-About HTML Codex:
+*About HTML Codex:*
 HTML Codex is a major publisher of free and premium HTML templates, landing pages, email templates, and snippets.
 Read more at: https://htmlcodex.com/about-us
 
@@ -191,7 +191,7 @@ https://www.pexels.com/photo/cozy-winter-latte-in-graz-austria-29784884/
 
 ## 📜 Licence
 
-This project uses the Koppee HTML Template under the HTML Codex commercial licence.
+**This project uses the Koppee HTML Template under the HTML Codex commercial licence.**
 Ensure compliance with their licence terms when modifying or deploying the template.
 
-Your custom Flask backend code is free to use and modify as you wish.
+Custom Flask backend code is free to use and modify as you wish.
