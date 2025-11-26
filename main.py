@@ -4,6 +4,7 @@ from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 
@@ -39,7 +40,7 @@ REGION_MAP = {
     "central": ["Euston", "Westminster", "Camden Town", "Holborn", "Soho", "Shoreditch", "Clerkenwell", "Borough", "London Bridge", "Bankside", "Barbican", "Russel Square"]
 }
 
-import re
+EMAIL_REGEX = r'^[\w\.-]+@[\w\.-]+\.\w+$'
 
 def extract_coords(url: str):
     """
@@ -193,6 +194,11 @@ def signup():
         email = request.form.get('email')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
+
+        # Check if email is valid
+        if not re.match(EMAIL_REGEX, email):
+            flash("Please enter a valid email address.", "danger")
+            return redirect(url_for('signup'))
 
         if password != confirm_password:
             flash("Passwords do not match.", "danger")
