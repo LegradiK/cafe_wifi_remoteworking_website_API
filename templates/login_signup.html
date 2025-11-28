@@ -141,6 +141,18 @@
 
     <!-- Template Javascript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab');
+            if (tab === 'signup') {
+                const signupTab = new bootstrap.Tab(document.querySelector('#signup-tab'));
+                signupTab.show();
+            }
+        });
+    </script>
+
 </body>
 
 </html>

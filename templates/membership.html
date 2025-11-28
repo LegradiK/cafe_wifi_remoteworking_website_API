@@ -103,7 +103,7 @@
                                 {% if session.get('user_id') %}
                                     <a href="{{ url_for('add_cafe') }}" class="btn btn-primary btn-lg">Add Another Café</a>
                                 {% else %}
-                                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Join Now</a>
+                                    <a href="{{ url_for('login') }}?tab=signup" class="btn btn-primary btn-lg">Join Now</a>
                                 {% endif %}
                             </div>
                         </div>
